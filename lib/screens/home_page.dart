@@ -1,5 +1,8 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:training_app/screens/video_info.dart';
 import 'package:training_app/utils/colors.dart' as color;
 
 class HomePage extends StatefulWidget {
@@ -10,6 +13,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List info = [];
+  _initData(){
+    DefaultAssetBundle.of(context).loadString("json/info.json").then((value){
+      info = json.decode(value);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,10 +92,15 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       SizedBox(width: 3),
-                      Icon(
-                        Icons.arrow_forward,
-                        size: 16,
-                        color: color.AppColor.homePageIcons,
+                      InkWell(
+                        onTap: (){
+                          Get.to(()=>VideoInfo());
+                        },
+                        child: Icon(
+                          Icons.arrow_forward,
+                          size: 16,
+                          color: color.AppColor.homePageIcons,
+                        ),
                       )
                     ],
                   ),
@@ -273,27 +294,59 @@ class _HomePageState extends State<HomePage> {
               Container(
                 width: double.maxFinite,
                 height: 200,
-                child: ListView.builder(
-                  itemCount: 4,
-                  itemBuilder: (_, index) {
-                    return Row(
-                      children: [
-                        Container(
-                          width: 100,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage(
-                                "assets/images/ex1.png"
+                child: MediaQuery.removePadding(
+                  removeTop: true,
+                  context: context,
+                  child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                    itemCount: info.length,
+                    itemBuilder: (_, index) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Container(
+                            width: (MediaQuery.of(context).size.width-90)/2,
+                            height: 150,
+                            padding: EdgeInsets.only(bottom: 5),
+                            margin: EdgeInsets.only(bottom: 5, top: 15),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                              image: DecorationImage(
+                                image: AssetImage(info[index]['img']),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 3,
+                                  offset: Offset(5, 5),
+                                  color: color.AppColor.gradientSecond
+                                      .withOpacity(0.1),
+                                ),
+                                BoxShadow(
+                                  blurRadius: 3,
+                                  offset: Offset(-5, -5),
+                                  color: color.AppColor.gradientSecond
+                                      .withOpacity(0.1),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Text(
+                                  info[index]['title'],
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: color.AppColor.homePageDetail,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    );
-                  },
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ),
             ],
