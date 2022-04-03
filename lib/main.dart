@@ -22,7 +22,7 @@ class _MainScreenState extends State<MainScreen> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: VideoInfo(),
+      home: HomePage(),
     );
   }
 }
