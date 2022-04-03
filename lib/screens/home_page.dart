@@ -293,7 +293,7 @@ class _HomePageState extends State<HomePage> {
               ),
               Container(
                 width: double.maxFinite,
-                height: 200,
+                height: 250,
                 child: MediaQuery.removePadding(
                   removeTop: true,
                   context: context,
